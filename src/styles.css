@@ -1,0 +1,184 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap');
+
+:root {
+  --ink: #0B1220;
+  --ink-raised: #131C2E;
+  --paper: #F2F0EB;
+  --gold: #D4A24E;
+  --rust: #C75C4A;
+  --slate: #6B7686;
+  --line: rgba(242, 240, 235, 0.1);
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+
+body {
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-body);
+  min-height: 100vh;
+}
+
+#root {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 0 20px 80px;
+}
+
+a { color: var(--gold); }
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+}
+
+button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 2px;
+}
+
+.btn {
+  background: var(--gold);
+  color: var(--ink);
+  border: none;
+  border-radius: 6px;
+  padding: 12px 20px;
+  font-weight: 600;
+  font-size: 15px;
+}
+.btn:hover { background: #e0b566; }
+.btn.secondary {
+  background: transparent;
+  color: var(--paper);
+  border: 1px solid var(--line);
+}
+.btn.secondary:hover { border-color: var(--gold); }
+.btn.danger { background: transparent; color: var(--rust); border: 1px solid var(--rust); }
+
+input, select {
+  background: var(--ink-raised);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-family: var(--font-mono);
+  font-size: 15px;
+  width: 100%;
+}
+
+label {
+  font-size: 13px;
+  color: var(--slate);
+  display: block;
+  margin-bottom: 4px;
+}
+
+.field { margin-bottom: 14px; }
+
+.card {
+  background: var(--ink-raised);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+}
+
+.hero-date {
+  font-family: var(--font-display);
+  font-size: clamp(40px, 11vw, 64px);
+  font-weight: 600;
+  line-height: 1;
+  margin: 6px 0 0;
+}
+
+.row { display: flex; justify-content: space-between; align-items: baseline; }
+
+.debt-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid var(--line);
+}
+.debt-row:last-child { border-bottom: none; }
+
+.debt-name { font-weight: 600; }
+.debt-meta { color: var(--slate); font-size: 13px; font-family: var(--font-mono); }
+.debt-balance { font-family: var(--font-mono); font-size: 18px; }
+
+.tag {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--gold);
+  color: var(--gold);
+}
+
+.strategy-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+.strategy-tab {
+  flex: 1;
+  padding: 10px;
+  text-align: center;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--slate);
+  font-size: 13px;
+  font-weight: 600;
+}
+.strategy-tab.active {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212, 162, 78, 0.08);
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 24px 0 8px;
+}
+.app-title {
+  font-family: var(--font-display);
+  font-size: 19px;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--slate);
+}
+
+.slider-row { display: flex; align-items: center; gap: 12px; }
+input[type=range] { width: 100%; -webkit-appearance: none; background: transparent; }
+input[type=range]::-webkit-slider-runnable-track {
+  height: 4px; background: var(--line); border-radius: 2px;
+}
+input[type=range]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 18px; height: 18px;
+  border-radius: 50%;
+  background: var(--gold);
+  margin-top: -7px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
