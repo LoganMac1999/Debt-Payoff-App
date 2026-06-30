@@ -10,21 +10,20 @@ export default function HouseholdSetup({ user, onReady }) {
   async function createHousehold() {
     setLoading(true)
     setError('')
-    const { data: household, error: hErr } = await supabase
+    const newId = crypto.randomUUID()
+    const { error: hErr } = await supabase
       .from('households')
-      .insert({ name: 'Our Household' })
-      .select()
-      .single()
+      .insert({ id: newId, name: 'Our Household' })
     if (hErr) { setError(hErr.message); setLoading(false); return }
 
     const { error: mErr } = await supabase
       .from('household_members')
-      .insert({ household_id: household.id, user_id: user.id })
+      .insert({ household_id: newId, user_id: user.id })
     if (mErr) { setError(mErr.message); setLoading(false); return }
 
-    await supabase.from('household_settings').insert({ household_id: household.id })
+    await supabase.from('household_settings').insert({ household_id: newId })
     setLoading(false)
-    onReady(household.id)
+    onReady(newId)
   }
 
   async function joinHousehold() {

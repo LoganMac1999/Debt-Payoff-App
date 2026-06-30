@@ -68,6 +68,8 @@ $$ language sql security definer;
 
 create policy "members can view their household" on households
   for select using (is_household_member(id));
+create policy "authenticated users can create households" on households
+  for insert with check (auth.uid() is not null);
 
 create policy "members can view membership" on household_members
   for select using (user_id = auth.uid() or is_household_member(household_id));
