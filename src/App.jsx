@@ -17,7 +17,19 @@ export default function App() {
     const { data: listener } = supabase.auth.onAuthStateChange((_event, sess) => {
       setSession(sess)
     })
-    return () => listener.subscription.unsubscribe()
+    // iOS PWA fix: re-check session whenever the app comes back into focus,
+    // since the magic link opens in Safari and the session may have been
+    // established there after the PWA was already open.
+    function handleVisibilityChange() {
+      if (document.visibilityState === 'visible') {
+        supabase.auth.getSession().then(({ data }) => setSession(data.session))
+      }
+    }
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+    return () => {
+      listener.subscription.unsubscribe()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
   }, [])
 
   useEffect(() => {
