@@ -3,21 +3,35 @@ import { supabase } from '../lib/supabaseClient'
 
 export default function AuthScreen() {
   const [email, setEmail] = useState('')
-  const [sent, setSent] = useState(false)
+  const [code, setCode] = useState('')
+  const [step, setStep] = useState('email') // 'email' | 'code'
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
-  async function handleSubmit(e) {
+  async function sendCode(e) {
     e.preventDefault()
     setLoading(true)
     setError('')
     const { error } = await supabase.auth.signInWithOtp({
       email,
-      options: { emailRedirectTo: window.location.origin },
+      options: { shouldCreateUser: true },
     })
     setLoading(false)
     if (error) setError(error.message)
-    else setSent(true)
+    else setStep('code')
+  }
+
+  async function verifyCode(e) {
+    e.preventDefault()
+    setLoading(true)
+    setError('')
+    const { error } = await supabase.auth.verifyOtp({
+      email,
+      token: code.trim(),
+      type: 'email',
+    })
+    setLoading(false)
+    if (error) setError('Invalid or expired code — try again.')
   }
 
   return (
@@ -27,16 +41,13 @@ export default function AuthScreen() {
         Get out of debt on purpose.
       </h1>
       <p style={{ color: 'var(--slate)', marginTop: 12, marginBottom: 28 }}>
-        Sign in with your email — no password, just a one-time link. You and your
-        partner can share the same household.
+        {step === 'email'
+          ? 'Sign in with your email — we\'ll send you a 6-digit code.'
+          : `Enter the 6-digit code sent to ${email}.`}
       </p>
 
-      {sent ? (
-        <div className="card">
-          <p>Check <strong>{email}</strong> for a sign-in link.</p>
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
+      {step === 'email' ? (
+        <form onSubmit={sendCode}>
           <div className="field">
             <label htmlFor="email">Email</label>
             <input
@@ -50,7 +61,33 @@ export default function AuthScreen() {
           </div>
           {error && <p style={{ color: 'var(--rust)', fontSize: 13 }}>{error}</p>}
           <button className="btn" type="submit" disabled={loading}>
-            {loading ? 'Sending…' : 'Send sign-in link'}
+            {loading ? 'Sending…' : 'Send code'}
+          </button>
+        </form>
+      ) : (
+        <form onSubmit={verifyCode}>
+          <div className="field">
+            <label htmlFor="code">6-digit code</label>
+            <input
+              id="code"
+              type="text"
+              inputMode="numeric"
+              pattern="[0-9]*"
+              maxLength={6}
+              required
+              autoFocus
+              value={code}
+              onChange={e => setCode(e.target.value)}
+              placeholder="123456"
+            />
+          </div>
+          {error && <p style={{ color: 'var(--rust)', fontSize: 13 }}>{error}</p>}
+          <button className="btn" type="submit" disabled={loading}>
+            {loading ? 'Verifying…' : 'Sign in'}
+          </button>
+          <button type="button" className="btn secondary" style={{ marginTop: 10, width: '100%' }}
+            onClick={() => { setStep('email'); setCode(''); setError('') }}>
+            Use a different email
           </button>
         </form>
       )}
